@@ -21,7 +21,7 @@ def addGlobalAttributes(f,filename)   :
     
     #Write creation of file
     f.Conventions = 'CF-1.7, SONAR-netCDF4, ACDD-1.3'
-    f._NCProperties = 'version=1|netcdflibversion=4.6.1|hdf5libversion=1.8.20'
+    #f._NCProperties = 'version=1|netcdflibversion=4.6.1|hdf5libversion=1.8.20'
     f.date_created = str(filetime).replace(' ','T')
     f.keywords = 'Simrad '+filename[:4]
     f.license = 'None'
@@ -59,7 +59,7 @@ def addAnnotation(fid):
     
     #Make time into variable and add attributes
     time = fid.groups['Annotation'].createVariable('time',np.uint64,('time',), chunksizes = (512,))
-    time.NAME = 'time'
+    #time.NAME = 'time'
     time.axis = 'T'
     time.calendar = 'gregorian'
     time.long_name = 'Timestamps of annotations'
@@ -95,7 +95,7 @@ def addEnvironment(fid):
     freq = fid.groups['Environment'].createVariable('frequency',np.float32,('frequency',),chunksizes = (512,))
     
 #    freq.chunksizes = 1
-    freq.NAME = 'frequency'
+    #freq.NAME = 'frequency'
     freq.long_name = 'Acoustic frequency'
     freq.standard_name = 'sound_frequency'
     freq.units = 'Hz'
@@ -156,7 +156,7 @@ def addPlatform(fid,platform_code, platform_name, platform_type,f):
         
     #create time variable in subgroup
     time = grp2.createVariable('time',np.uint64,('time',), chunksizes = (512,))
-    time.NAME = 'time'
+    #time.NAME = 'time'
     time.axis = 'T'
     time.calendar = 'gregorian'
     time.long_name = 'Timestamps for NMEA datagrams'
@@ -205,19 +205,19 @@ def writePlatformData(FileData,GPSsourceList,fid):
         var.long_name = 'Platform roll'
         var.standard_name = 'platform_roll_angle'
         var.units = 'arc_degree'
-        var.valid_range = '-180.0,180.0'
+        var.valid_range = np.array((-180.0,180.0))
         
         grp.createVariable('pitch',np.float32,(time,), chunksizes = (512,))
         var = grp.variables['pitch']
         var.long_name = 'Platform pitch'
         var.standard_name = 'platform_pitch_angle'
         var.units = 'arc_degree'
-        var.valid_range = '90.0,90.0'
+        var.valid_range = np.array((90.0,90.0))
         
         
         
         time_var = grp.createVariable(time,np.uint64,(time,), chunksizes = (512,))
-        time_var.NAME = time
+     #   time_var.NAME = time
         time_var.axis = 'T'
         time_var.calendar = 'gregorian'
         time_var.long_name = 'Timestamps for MRU data'
@@ -243,12 +243,12 @@ def writePlatformData(FileData,GPSsourceList,fid):
         var.long_name = 'Platform heading (true)'
         var.standard_name = 'platform_orientation'
         var.units = 'degrees_north'
-        var.valid_range = '0.0,360.0'
+        var.valid_range = np.array((0.0,360.0))
             
         
         
         time_var = addvar.createVariable(name,np.uint64,(name,), chunksizes = (512,))
-        time_var.NAME = name
+      #  time_var.NAME = name
         time_var.axis = 'T'
         time_var.calendar = 'gregorian'
         time_var.long_name = long_name
@@ -274,7 +274,7 @@ def writePlatformData(FileData,GPSsourceList,fid):
         var.long_name = 'Platform latitude'
         var.standard_name = 'latitude'
         var.units = 'degrees_north'
-        var.valid_range = '-90.0,90.0'
+        var.valid_range = np.array((-90.0,90.0))
         
         
         grp.createVariable('longitude',np.float64,(time,), chunksizes = (512,))
@@ -282,7 +282,7 @@ def writePlatformData(FileData,GPSsourceList,fid):
         var.long_name = 'Platform longitude'
         var.standard_name = 'longitude'
         var.units = 'degrees_east'
-        var.valid_range = '-180.0,180.0'
+        var.valid_range = np.array((-180.0,180.0))
         
         
         grp.createVariable('speed_ground',np.float32,(time,), chunksizes = (512,))
@@ -302,7 +302,7 @@ def writePlatformData(FileData,GPSsourceList,fid):
         
     
         time_var = addvar.createVariable(name,np.uint64,(name,), chunksizes = (512,))
-        time_var.NAME = name
+       # time_var.NAME = name
         time_var.axis = 'T'
         time_var.calendar = 'gregorian'
         time_var.long_name = long_name
@@ -483,7 +483,7 @@ def addProvenance(fid):
     prov.createVariable('filenames',np.float32,'filenames', chunksizes = (512,))
     
     src = prov.variables['filenames']
-    src.NAME ='This is a netCDF dimension but not a netCDF variable.         0'
+#    src.NAME ='This is a netCDF dimension but not a netCDF variable.         0'
     
     prov.createVariable('source_filenames',str,'filenames', chunksizes = (512,))
     var = prov.variables['source_filenames']
@@ -535,7 +535,7 @@ def createSonarData(fid):
         sgrp.createDimension('beam',64)
         sgrp.createVariable('beam',str,'beam')
         beam = sgrp.variables['beam']
-        beam.NAME = 'beam'
+ #       beam.NAME = 'beam'
         beam.long_name = 'Beam Name'
         
         
@@ -561,19 +561,19 @@ def createSonarData(fid):
         back = sgrp.variables['beam_direction_x']
         back.long_name = 'x-component of the vector that gives the pointing direction of the beam, in sonar beam coordinate system'
         back.units = '1'
-        back.valid_range = '-1.0,1.0'
+        back.valid_range = np.array((-1.0,1.0))
         
         sgrp.createVariable('beam_direction_y',np.float32,('ping_time','beam'))
         back = sgrp.variables['beam_direction_y']
         back.long_name = 'y-component of the vector that gives the pointing direction of the beam, in sonar beam coordinate system'
         back.units = '1'
-        back.valid_range = '-1.0,1.0'
+        back.valid_range = np.array((-1.0,1.0))
     
         sgrp.createVariable('beam_direction_z',np.float32,('ping_time','beam'))
         back = sgrp.variables['beam_direction_z']
         back.long_name = 'z-component of the vector that gives the pointing direction of the beam, in sonar beam coordinate system'
         back.units = '1'
-        back.valid_range = '-1.0,1.0'
+        back.valid_range = np.array((-1.0,1.0))
     
         sgrp.createVariable('beam_stabilisation',beam_stabilisation_t,('ping_time',),chunksizes = (512,))
         back = sgrp.variables['beam_stabilisation']
@@ -587,31 +587,31 @@ def createSonarData(fid):
         back = sgrp.variables['beamwidth_receive_major']
         back.long_name = 'Half power one-way receive beam width along major (horizontal) axis of beam'
         back.units='arc_degree'
-        back.valid_range = '0.0,360.0'
+        back.valid_range = np.array((0.0,360.0))
     
         sgrp.createVariable('beamwidth_receive_minor',np.float32,('ping_time','beam'))
         back = sgrp.variables['beamwidth_receive_minor']
         back.long_name = 'Half power one-way receive beam width along minor (vertical) axis of beam'
         back.units='arc_degree'
-        back.valid_range = '0.0,360.0'
+        back.valid_range = np.array((0.0,360.0))
     
         sgrp.createVariable('beamwidth_transmit_major',np.float32,('ping_time','beam'))
         back = sgrp.variables['beamwidth_transmit_major']
         back.long_name = 'Half power one-way transmit beam width along major (horizontal) axis of beam'
         back.units='arc_degree'
-        back.valid_range = '0.0,360.0'
+        back.valid_range = np.array((0.0,360.0))
     
         sgrp.createVariable('beamwidth_transmit_minor',np.float32,('ping_time','beam'))
         back = sgrp.variables['beamwidth_transmit_minor']
         back.long_name = 'Half power one-way transmit beam width along minor (vertical) axis of beam'
         back.units='arc_degree'
-        back.valid_range = '0.0,360.0'
+        back.valid_range = np.array((0.0,360.0))
     
         sgrp.createVariable('equivalent_beam_angle',np.float32,('ping_time','beam'))
         back = sgrp.variables['equivalent_beam_angle']
         back.long_name = 'Equivalent beam angle'
         back.units='sr'
-        back.valid_range = '0.0,12.566371'
+        back.valid_range = np.array((0.0,12.566371))
     
         sgrp.createVariable('gain_correction',np.float32,('ping_time','beam'))
         back = sgrp.variables['gain_correction']
@@ -633,7 +633,7 @@ def createSonarData(fid):
         back = sgrp.variables['sample_interval']
         back.long_name = ' Interval between recorded raw data samples'
         back.units = 's'
-        back.calid_min = '0.0'
+        back.valid_min = '0.0'
     
         sgrp.createVariable('sample_time_offset',np.float32,('ping_time',),chunksizes = (512,))
         back = sgrp.variables['sample_time_offset']
@@ -699,7 +699,7 @@ def createSonarData(fid):
 
         
         time_var = addvar.createVariable(name,np.uint64,(name,),chunksizes = (512,))
-        time_var.NAME = name
+  #      time_var.NAME = name
         time_var.axis = 'T'
         time_var.calendar = 'gregorian'
         time_var.long_name = 'Timestamp of each ping'
