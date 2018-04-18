@@ -101,8 +101,7 @@ def Raw2NetcdfConverter(directoryToRaw,vessel_name,platform_type,
     this_dir, this_filename = os.path.split(__file__)
     template_file = os.path.join(this_dir, "data", "source_template.nc")
     
-
-    
+    f =Dataset(template_file,'r') 
     #Check if netcdf folder exist
     #If not create the directory
     if (not os.path.isdir(directory)): 
@@ -156,9 +155,7 @@ def Raw2NetcdfConverter(directoryToRaw,vessel_name,platform_type,
         #Copy template to current folder, and rename it
 #        copyfile(template_file,ncfilename)
 
-        
         #open new .nc file
-        f =Dataset(template_file,'r') 
         fid = Dataset(ncfilename,'w')
 
         #Add global attribtues

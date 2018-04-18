@@ -9,6 +9,6 @@ setup(name='Raw2NetcdfConverter',
       license='GPL3',
       packages=['Raw2NetcdfConverter'],
 #      install_requires=['pynmea2','pytz'],
-      package_data={'':['data\*.nc']},
+      package_data={'':['data/*.nc']},
       zip_safe=False)
 
