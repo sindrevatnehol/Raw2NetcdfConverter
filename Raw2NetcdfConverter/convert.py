@@ -154,12 +154,12 @@ def Raw2NetcdfConverter(directoryToRaw,vessel_name,platform_type,
     
 
         #Copy template to current folder, and rename it
-        copyfile(template_file,ncfilename)
+#        copyfile(template_file,ncfilename)
 
         
         #open new .nc file
-        f =Dataset(ncfilename,'a') 
-        fid = Dataset(ncfilename.replace('SU','test'),'w')
+        f =Dataset(template_file,'r') 
+        fid = Dataset(ncfilename,'w')
 
         #Add global attribtues
         addGlobalAttributes(fid,filename)
