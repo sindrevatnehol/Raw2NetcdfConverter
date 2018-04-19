@@ -431,14 +431,16 @@ def writePlatformData(FileData,GPSsourceList,fid):
                     makeHeadingVariable(headingTime,grp)
                 
                 if Time != headingOldTime: 
-                    
-                    #Add the heading and time information
-                    grp.variables['heading'][LoopIndexHeading] = msg.heading
-                    grp.variables[headingTime][LoopIndexHeading] = Time
+                    try:  
+                        #Add the heading and time information
+                        grp.variables['heading'][LoopIndexHeading] = msg.heading
+                        grp.variables[headingTime][LoopIndexHeading] = Time
 
-                    #Somehting for bookkeeping
-                    headingOldTime = Time    
-                    LoopIndexHeading = LoopIndexHeading+1
+                        #Somehting for bookkeeping
+                        headingOldTime = Time    
+                        LoopIndexHeading = LoopIndexHeading+1
+                    except valueError: 
+                        k=1
             except AttributeError: 
                 k=1
                 
@@ -522,9 +524,9 @@ def createSonarData(fid):
         sgrp = sonar.groups['Beam_group'+str(i+1)]
 
         if i == 0: 
-            sgrp.beam_mode = 'Vertical'
-        else: 
             sgrp.beam_mode = 'Horizontal'
+        else: 
+            sgrp.beam_mode = 'Vertical'
             
         sgrp.conversion_equation_type = 1
 
