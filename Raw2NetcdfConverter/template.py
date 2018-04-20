@@ -439,7 +439,7 @@ def writePlatformData(FileData,GPSsourceList,fid):
                         #Somehting for bookkeeping
                         headingOldTime = Time    
                         LoopIndexHeading = LoopIndexHeading+1
-                    except valueError: 
+                    except ValueError: 
                         k=1
             except AttributeError: 
                 k=1
@@ -827,10 +827,15 @@ def addSonarData(FileData,fid,transducer_rotation):
                 for beamnum in range(0,64): 
                     #Write beam data
                     addvar = addvardir2.variables['backscatter_r']
-                    addvar[ping,beamnum] = np.array(BeamAmplitudeData[:,beamnum])
+                    try: 
+                        addvar[ping,beamnum] = np.array(BeamAmplitudeData[:,beamnum])
+                    except IndexError: 
+                        addvar[ping,beamnum] = np.nan
                     addvar = addvardir2.variables['backscatter_i']
-                    addvar[ping,beamnum] = np.array(BeamAmplitudeData_imaginary[:,beamnum])
-                    
+                    try: 
+                        addvar[ping,beamnum] = np.array(BeamAmplitudeData_imaginary[:,beamnum])
+                    except IndexError: 
+                        addvar[ping,beamnum] = np.nan
                     
                 
                 #Write other sonar data
