@@ -829,59 +829,123 @@ def addSonarData(FileData,fid,transducer_rotation):
                     addvar = addvardir2.variables['backscatter_r']
                     try: 
                         addvar[ping,beamnum] = np.array(BeamAmplitudeData[:,beamnum])
-                    except IndexError: 
-                        addvar[ping,beamnum] = np.nan
+                    except IndexError:
+                        addvar[ping,beamnum] = np.array(np.float32(np.nan))#np.array(np.ones(addvar[:,0].shape))
+
                     addvar = addvardir2.variables['backscatter_i']
                     try: 
                         addvar[ping,beamnum] = np.array(BeamAmplitudeData_imaginary[:,beamnum])
                     except IndexError: 
-                        addvar[ping,beamnum] = np.nan
+                        addvar[ping,beamnum] = np.array(np.float32(np.nan))#np.ones(addvar[:,0].shape))
                     
                 
                 #Write other sonar data
                 addvar = addvardir2.variables['equivalent_beam_angle']
-                addvar[ping,:] = 10**(equivalentbeamangle/10)
+                try: 
+                    addvar[ping,:] = 10**(equivalentbeamangle/10)
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['transducer_gain']
-                addvar[ping,:] = transducer_gain
+                try: 
+                    addvar[ping,:] = transducer_gain
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['beamwidth_receive_major']
-                addvar[ping,:] = BWalong
+                try: 
+                    addvar[ping,:] = BWalong
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['beamwidth_receive_minor']
-                addvar[ping,:] = BWatwh
+                try: 
+                    addvar[ping,:] = BWatwh
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['beamwidth_transmit_major']
-                addvar[ping,:] = BWalongTX
+                try: 
+                    addvar[ping,:] = BWalongTX
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['beamwidth_transmit_minor']
-                addvar[ping,:] = BWatwhTX
+                try: 
+                    addvar[ping,:] = BWatwhTX
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['transmit_bandwidth']
                 addvar = addvardir2.variables['sample_interval']
-                addvar[ping] = sampleinterval
+                try: 
+                    addvar[ping] = sampleinterval
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['transmit_frequency_start']
-                addvar[ping] = frequency
+                try: 
+                    addvar[ping] = frequency
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['transmit_frequency_stop']
-                addvar[ping] = frequency
+                try: 
+                    addvar[ping] = frequency
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['transmit_duration_equivalent']
-                addvar[ping] = pulslength
+                try: 
+                    addvar[ping] = pulslength
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['transmit_duration_nominal']
-                addvar[ping] = pulslength
+                try: 
+                    addvar[ping] = pulslength
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['transmit_power']
-                addvar[ping] =transmitpower
+                try: 
+                    addvar[ping] =transmitpower
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['sample_time_offset']
-                addvar[ping] =0.004
+                try: 
+                    addvar[ping] =0.004
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['beam_type']
-                addvar[ping] =0
+                try: 
+                    addvar[ping] =0
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['transmit_type']
-                addvar[ping] =transmitmode
+                try: 
+                    addvar[ping] =transmitmode
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['ping_time']
-                addvar[ping] = Time
+                try: 
+                    addvar[ping] = Time
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['beam_direction_x']
-                addvar[ping,:] = dirx_u
+                try: 
+                    addvar[ping,:] = dirx_u
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['beam_direction_y']
-                addvar[ping,:] = diry_u
+                try: 
+                    addvar[ping,:] = diry_u
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar = addvardir2.variables['beam_direction_z']
-                addvar[ping,:] = dirz_u
+                try: 
+                    addvar[ping,:] = dirz_u
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar=addvardir2.variables['beam_stabilisation']
-                addvar[ping] = 1
+                try: 
+                    addvar[ping] = 1
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 addvar=addvardir2.variables['non_quantitative_processing']
-                addvar[ping] = NoiseFilter
+                try: 
+                    addvar[ping] = NoiseFilter
+                except ValueError: 
+                    addvar[ping,:] = np.nan
                 
                 
                 #For bookeeping
