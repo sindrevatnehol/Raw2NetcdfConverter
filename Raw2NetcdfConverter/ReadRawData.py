@@ -326,24 +326,26 @@ def ReadRawData(fid,headerlength):
                                           np.float32)
                 
 #                data = np.fromfile(fid,np.float32,count=2*(FileData.PingData[ping_count-1].count[BeamCount-1]) )
+                try: 
+                    data = data.reshape(FileData.PingData[ping_count-1].count[BeamCount-1],2).transpose()
                 
-                data = data.reshape(FileData.PingData[ping_count-1].count[BeamCount-1],2).transpose()
+                    #sort the data into real and imaginary
+                    realstuff = data[0,0:t[1]]
+                    imaginarystuff = data[1,0:t[1]]
+                  
+                    
+                    #If the data is the first beam
+                    if len(data)>len(FileData.PingData[ping_count-1].BeamAmplitudeData):
+                        FileData.PingData[ping_count-1].BeamAmplitudeData=realstuff[:, np.newaxis]
+                        FileData.PingData[ping_count-1].BeamAmplitudeData_imaginary=imaginarystuff[:, np.newaxis]
+    
+                    #For other beams
+                    else:
+                        FileData.PingData[ping_count-1].BeamAmplitudeData=np.hstack((FileData.PingData[ping_count-1].BeamAmplitudeData,realstuff[:, np.newaxis]))
+                        FileData.PingData[ping_count-1].BeamAmplitudeData_imaginary=np.hstack((FileData.PingData[ping_count-1].BeamAmplitudeData_imaginary,imaginarystuff[:, np.newaxis]))
 
-                #sort the data into real and imaginary
-                realstuff = data[0,0:t[1]]
-                imaginarystuff = data[1,0:t[1]]
-              
-                
-                #If the data is the first beam
-                if len(data)>len(FileData.PingData[ping_count-1].BeamAmplitudeData):
-                    FileData.PingData[ping_count-1].BeamAmplitudeData=realstuff[:, np.newaxis]
-                    FileData.PingData[ping_count-1].BeamAmplitudeData_imaginary=imaginarystuff[:, np.newaxis]
-
-                #For other beams
-                else:
-                    FileData.PingData[ping_count-1].BeamAmplitudeData=np.hstack((FileData.PingData[ping_count-1].BeamAmplitudeData,realstuff[:, np.newaxis]))
-                    FileData.PingData[ping_count-1].BeamAmplitudeData_imaginary=np.hstack((FileData.PingData[ping_count-1].BeamAmplitudeData_imaginary,imaginarystuff[:, np.newaxis]))
-
+                except ValueError: 
+                    k=1
                 
         #somehting read but never used        
         fread(fid,1,np.int32)
