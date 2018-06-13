@@ -26,7 +26,7 @@ www.redus.no
 import glob,os, pynmea2,os.path
 from netCDF4 import Dataset
 import numpy as np
-from shutil import copyfile
+#from shutil import copyfile
 from .ReadRawData import ReadRawData
 from .template import addAnnotation, addEnvironment, addPlatform, addProvenance
 from .template import addGlobalAttributes, writePlatformData, createSonarData
@@ -160,60 +160,62 @@ def Raw2NetcdfConverter(directoryToRaw,vessel_name,platform_type,
             
         #open .raw file
         fid = open(filename,mode='rb')
-        
-       
-        
-        #Read the .raw file according to SIMRAD spesifications
-        FileData = ReadRawData(fid,12)
-        
-        
-        
-        #Get the transduser rotation
-        #This is a correction of the true direction of the beams
-        transducer_rotation =  FileData.dirz
-                    
-        
-        #Set the directory to where the netcdf should be stored
-        os.chdir(directory)
-        
+        try: 
+           
             
-        #Set the name of the .nc file to the same as the first .raw file                        
-        ncfilename=filename[:-4]+'.nc'
-
-        #open new .nc file
-        fid = Dataset(ncfilename,'w')
-
-        #Add global attribtues
-        addGlobalAttributes(fid,filename)
-        
-        #Create annotation level
-        addAnnotation(fid)
-        
-        #create environment level
-        addEnvironment(fid)
-        
-        #create platform level
-        addPlatform(fid,platform_code, vessel_name, platform_type,f)
-        
-        #create the provinence group
-        addProvenance(fid)
-        
-        #create sonar data group
-        createSonarData(fid)
-
-        #create Vendor specific group
-        addVendorSpecificGrp(fid)
-
-        #Get the list of nmea sources according to priority list
-        GPSsourceList = getGPSsourcesfromdata(FileData.NMEA_info)
-        
-        #Write platform data 
-        writePlatformData(FileData,GPSsourceList,fid)
-        
-        #Write environment data
-        addEnvironmentData(FileData, fid)
-
-        #Write sonar data        
-        addSonarData(FileData,fid,transducer_rotation)
+            #Read the .raw file according to SIMRAD spesifications
+            FileData = ReadRawData(fid,12)
+            
+            
+            
+            #Get the transduser rotation
+            #This is a correction of the true direction of the beams
+            transducer_rotation =  FileData.dirz
                         
-        fid.close()
+            
+            #Set the directory to where the netcdf should be stored
+            os.chdir(directory)
+            
+                
+            #Set the name of the .nc file to the same as the first .raw file                        
+            ncfilename=filename[:-4]+'.nc'
+    
+            #open new .nc file
+            fid = Dataset(ncfilename,'w')
+    
+            #Add global attribtues
+            addGlobalAttributes(fid,filename)
+            
+            #Create annotation level
+            addAnnotation(fid)
+            
+            #create environment level
+            addEnvironment(fid)
+            
+            #create platform level
+            addPlatform(fid,platform_code, vessel_name, platform_type,f)
+            
+            #create the provinence group
+            addProvenance(fid)
+            
+            #create sonar data group
+            createSonarData(fid)
+    
+            #create Vendor specific group
+            addVendorSpecificGrp(fid)
+    
+            #Get the list of nmea sources according to priority list
+            GPSsourceList = getGPSsourcesfromdata(FileData.NMEA_info)
+            
+            #Write platform data 
+            writePlatformData(FileData,GPSsourceList,fid)
+            
+            #Write environment data
+            addEnvironmentData(FileData, fid)
+    
+            #Write sonar data        
+            addSonarData(FileData,fid,transducer_rotation)
+                            
+            fid.close()
+        except: 
+            print('Skipped file')
