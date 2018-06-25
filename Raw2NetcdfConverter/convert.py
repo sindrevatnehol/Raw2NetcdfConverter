@@ -160,62 +160,63 @@ def Raw2NetcdfConverter(directoryToRaw,vessel_name,platform_type,
             
         #open .raw file
         fid = open(filename,mode='rb')
-        try: 
+#        try: 
            
+        
+        #Read the .raw file according to SIMRAD spesifications
+        FileData = ReadRawData(fid,12)
+        
+        
+        
+        #Get the transduser rotation
+        #This is a correction of the true direction of the beams
+        transducer_rotation =  FileData.dirz
+                    
+        
+        #Set the directory to where the netcdf should be stored
+        os.chdir(directory)
+        
             
-            #Read the .raw file according to SIMRAD spesifications
-            FileData = ReadRawData(fid,12)
-            
-            
-            
-            #Get the transduser rotation
-            #This is a correction of the true direction of the beams
-            transducer_rotation =  FileData.dirz
-                        
-            
-            #Set the directory to where the netcdf should be stored
-            os.chdir(directory)
-            
-                
-            #Set the name of the .nc file to the same as the first .raw file                        
-            ncfilename=filename[:-4]+'.nc'
-    
-            #open new .nc file
-            fid = Dataset(ncfilename,'w')
-    
-            #Add global attribtues
-            addGlobalAttributes(fid,filename)
-            
-            #Create annotation level
-            addAnnotation(fid)
-            
-            #create environment level
-            addEnvironment(fid)
-            
-            #create platform level
-            addPlatform(fid,platform_code, vessel_name, platform_type,f)
-            
-            #create the provinence group
-            addProvenance(fid)
-            
-            #create sonar data group
-            createSonarData(fid)
-    
-            #create Vendor specific group
-            addVendorSpecificGrp(fid)
-    
-            #Get the list of nmea sources according to priority list
-            GPSsourceList = getGPSsourcesfromdata(FileData.NMEA_info)
-            
-            #Write platform data 
+        #Set the name of the .nc file to the same as the first .raw file                        
+        ncfilename=filename[:-4]+'.nc'
+
+        #open new .nc file
+        fid = Dataset(ncfilename,'w')
+
+        #Add global attribtues
+        addGlobalAttributes(fid,filename)
+        
+        #Create annotation level
+        addAnnotation(fid)
+        
+        #create environment level
+        addEnvironment(fid)
+        
+        #create platform level
+        addPlatform(fid,platform_code, vessel_name, platform_type,f)
+        
+        #create the provinence group
+        addProvenance(fid)
+        
+        #create sonar data group
+        createSonarData(fid)
+
+        #create Vendor specific group
+        addVendorSpecificGrp(fid)
+
+        #Get the list of nmea sources according to priority list
+        GPSsourceList = getGPSsourcesfromdata(FileData.NMEA_info)
+        
+        #Write platform data 
+        if not GPSsourceList== []: 
             writePlatformData(FileData,GPSsourceList,fid)
-            
-            #Write environment data
-            addEnvironmentData(FileData, fid)
-    
-            #Write sonar data        
-            addSonarData(FileData,fid,transducer_rotation)
-                            
-            fid.close()
-        except: 
-            print('Skipped file')
+        
+        #Write environment data
+        addEnvironmentData(FileData, fid)
+
+        #Write sonar data        
+        addSonarData(FileData,fid,transducer_rotation)
+                        
+        fid.close()
+#        except: 
+#            print('Skipped file')

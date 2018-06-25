@@ -82,6 +82,7 @@ def ReadRawData(fid,headerlength):
     #Write the datagram type
     FileData.datagramtype=StringArray(fread(fid,4,np.str) )
     
+    
     #Datetime
     FileData.datetime=TimeConverter(fread(fid,2,np.uint32))
     
@@ -154,7 +155,6 @@ def ReadRawData(fid,headerlength):
         #get time
         NMEA= fread(fid,1,np.uint64)
         
-        
         #Writn con1 information
         if datagramtype == 'CON1':
             FileData.text = StringArray(fread(fid,(bytes2read-headerlength),np.str))
@@ -165,7 +165,6 @@ def ReadRawData(fid,headerlength):
             FileData.NMEA_time[NMEA_count]=NMEA
             FileData.NMEA_info[NMEA_count]=StringArray(fread(fid,(bytes2read-headerlength),np.str))
             NMEA_count = NMEA_count+1
-            
             
         elif datagramtype == 'TAG0':
             FileData.text = StringArray(fread(fid,(bytes2read-headerlength),np.str))
